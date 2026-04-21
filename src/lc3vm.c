@@ -1,9 +1,9 @@
 /** @file lc3vm.c
  * @brief LC-3 VM Implementation
  *
- * @author Student Name
- * @note   cwid: 123456
- * @date   Spring 2024
+ * @author Brandon Halliday
+ * @note   cwid: 50376739
+ * @date   Spring 2026
  * @note   ide:  g++ 8.2.0 / GNU Make 4.2.1
  *
  * Implementation of LC-3 VM/Microarchitecture simulator.  Functions
@@ -48,9 +48,7 @@ uint16_t PC_START = 0x3000;
  *   simply reads and returns the 16 bits stored at the indicated address.
  */
 uint16_t mem_read(uint16_t address)
-{
-  return mem[address];
-}
+{ return mem[address]; }
 
 /** @brief memory write, transfer to memory
  *
@@ -68,9 +66,7 @@ uint16_t mem_read(uint16_t address)
  *   character, or some other type of data.
  */
 void mem_write(uint16_t address, uint16_t val)
-{
-  mem[address] = val;
-}
+{ mem[address] = val; }
 
 /** @brief sign extend bits
  *
@@ -324,9 +320,7 @@ void ldr(uint16_t i)
  *   second source register or the immediate value encoded in the
  */
 void lea(uint16_t i)
-{
-  reg[DR(i)] = reg[RPC] + PCOFF9(i);
-}
+{ reg[DR(i)] = reg[RPC] + PCOFF9(i); }
 
 /** @brief store to PC + offset
  *
@@ -342,9 +336,7 @@ void lea(uint16_t i)
  *   second source register or the immediate value encoded in the
  */
 void st(uint16_t i)
-{
-  mem_write(reg[RPC] + PCOFF9(i), reg[DR(i)]);
-}
+{ mem_write(reg[RPC] + PCOFF9(i), reg[DR(i)]); }
 
 /** @brief store indirect
  *
@@ -361,9 +353,7 @@ void st(uint16_t i)
  *   second source register or the immediate value encoded in the
  */
 void sti(uint16_t i)
-{
-  mem_write(mem_read(reg[RPC] + PCOFF9(i)), reg[DR(i)]);
-}
+{ mem_write(mem_read(reg[RPC] + PCOFF9(i)), reg[DR(i)]); }
 
 /** @brief store offset relative to base address
  *
@@ -379,9 +369,7 @@ void sti(uint16_t i)
  *   second source register or the immediate value encoded in the
  */
 void str(uint16_t i)
-{
-  mem_write(reg[SR1(i)] + OFF6(i), reg[DR(i)]);
-}
+{ mem_write(reg[SR1(i)] + OFF6(i), reg[DR(i)]); }
 
 /** @brief jump unconditionally
  *
@@ -395,9 +383,7 @@ void str(uint16_t i)
  *   second source register or the immediate value encoded in the
  */
 void jmp(uint16_t i)
-{
-  reg[RPC] = reg[SR1(i)];
-}
+{ reg[RPC] = reg[SR1(i)]; }
 
 /** @brief conditional branch
  *
@@ -743,18 +729,24 @@ void ld_img(char* fname)
  * @returns bool True if we are in user mode (bit 15 is 1) and False if we are
  *   in supervisor mode (bit 15 is 0).
  */
+bool is_user_mode()
+{ return (reg[PSR] >> 15) & 0x1; }
 
 /** @brief set user mode
  *
  * Set the machine into user mode.  This function sets bit 15 to be 1 to indicate
  * that we are now running in the less privileged user mode.
  */
+void user_mode()
+{ reg[PSR] |= 0x8000; }
 
 /** @brief set supervisor mode
  *
  * Set the machine into supervisor mode.  This function sets bit 15 to be 0
  * to indicate that we are now running in the more privileged supervisor mode.
  */
+void supervisor_mode()
+{ reg[PSR] &= 0x7FFF; }
 
 /** @brief get priority
  *
